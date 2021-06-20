@@ -42,12 +42,11 @@ class _SignInScreenState extends State<SignInScreen> {
   GlobalKey<FormState> _key = GlobalKey();
   bool isregistered = false;
 
-          // register(xfname.text,xphone.text,xpassword.text,xlocation.text);
-
+  // register(xfname.text,xphone.text,xpassword.text,xlocation.text);
 
   Future<dynamic> register(
       String fname, String phone, String password, String location) async {
-    String myApi = "http://192.168.43.195/homecare/api/register.php/";
+    String myApi = "http://192.168.43.117/homecare/api/register.php/";
     final response = await http.post(myApi, headers: {
       'Accept': 'application/json'
     }, body: {
@@ -332,18 +331,21 @@ class _SignInScreenState extends State<SignInScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       onPressed: () {
         print("Register");
-        if(xfname.text == "" "" || xphone.text == "" || xpassword.text == "" || xlocation.text == "") {
-         (){
+        if (xfname.text == "" "" ||
+            xphone.text == "" ||
+            xpassword.text == "" ||
+            xlocation.text == "") {
+          () {
             return Fluttertoast.showToast(
-            msg: "Please Provied All records",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white); 
-         }();       
-        }else{
-          register(xfname.text,xphone.text,xpassword.text,xlocation.text);
+                msg: "Please Provied All records",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white);
+          }();
+        } else {
+          register(xfname.text, xphone.text, xpassword.text, xlocation.text);
         }
       },
       textColor: Colors.white,

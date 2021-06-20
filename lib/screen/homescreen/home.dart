@@ -4,13 +4,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:realEstate/screen/auth/login.dart';
 import 'package:realEstate/screen/homescreen/about_app.dart';
 import 'package:realEstate/screen/homescreen/articles.dart';
+import 'package:realEstate/screen/homescreen/callhistory.dart';
 import 'package:realEstate/screen/homescreen/landpage.dart';
 import 'package:realEstate/screen/homescreen/profile.dart';
+import 'package:realEstate/screen/homescreen/track_history.dart';
+import 'package:wakelock/wakelock.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String title;
+  final String phonenumber;
 
-  HomeScreen({Key key, this.title}) : super(key: key);
+  HomeScreen({this.phonenumber});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -18,6 +21,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    Wakelock.disable();
+  }
 
   // ignore: missing_return
   Widget _activeWidget(int index) {
@@ -32,11 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       case 2:
         // members
-        return Center(child: Text("Track Not Done Yet"));
+        return TrackHistory(
+          phonenumber: widget.phonenumber,
+        );
         break;
       case 3:
         // profile
-        return Profile();
+        return CallHistory(
+           phonenumber: widget.phonenumber,
+        );
         break;
 
       default:
@@ -52,9 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
     NavigationItem(Icon(Icons.home), Text('Home'), Colors.deepPurpleAccent),
     NavigationItem(
         Icon(Icons.new_releases), Text('Articles'), Colors.pinkAccent),
-    NavigationItem(Icon(Icons.trending_up_rounded), Text('Monitor'), Colors.amberAccent),
     NavigationItem(
-        Icon(Icons.person_outline), Text('Profile'), Colors.cyanAccent)
+        Icon(Icons.trending_up_rounded), Text('Monitor'), Colors.amberAccent),
+    NavigationItem(Icon(Icons.call), Text('Call History'), Colors.cyanAccent)
   ];
 
   Widget _buildItem(NavigationItem item, bool isSelected) {
@@ -202,10 +215,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontFamily: 'Raleway'),
               ),
               onTap: () {
-                 Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
-                  );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
               },
             ),
             // ListTile(
@@ -237,17 +250,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),
             ListTile(
               onTap: () {
-                 Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
-                  return Fluttertoast.showToast(
-                      msg: "See you next time",
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIos: 1,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+                return Fluttertoast.showToast(
+                    msg: "See you next time",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white);
               },
               leading: Icon(Icons.exit_to_app),
               title: Text(

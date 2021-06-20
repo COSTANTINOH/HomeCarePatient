@@ -13,7 +13,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
   Future<dynamic> getArticlesPage() async {
     // print(_cargono);
     // print(_cphone);
-    String myApi = "http://192.168.43.195/homecare/api/getpost.php";
+    String myApi = "http://192.168.43.117/homecare/api/getpost.php";
     //tosh90.000webhostapp.com
     final response =
         await http.post(myApi, headers: {'Accept': 'application/json'});
@@ -62,6 +62,19 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.0,
                               )),
+                          Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Container(
+                              height: 200.0,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  'http://192.168.43.117/homecare/admin/posts/${snapshot.data[index]['image_name']}',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
                           Row(
                             children: <Widget>[
                               SizedBox(
@@ -72,13 +85,12 @@ class _ArticlesPageState extends State<ArticlesPage> {
                               ),
                               Expanded(
                                 child: Text(
-                                  '${snapshot.data[index]['description']}',
-                                  overflow: TextOverflow.clip,
-                                  style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12.0,
-                              )
-                                ),
+                                    '${snapshot.data[index]['description']}',
+                                    overflow: TextOverflow.clip,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 12.0,
+                                    )),
                               ),
                               SizedBox(
                                 width: 10,
@@ -88,14 +100,14 @@ class _ArticlesPageState extends State<ArticlesPage> {
                               ),
                             ],
                           ),
-                           Text(
-                                'Post Date : ${snapshot.data[index]['post_date']}', 
-                                style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
-                              ),
-                                //some other text in the end of the card or maybe an icon instead
+                          Text(
+                            'Post Date : ${snapshot.data[index]['post_date']}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0,
+                            ),
+                            //some other text in the end of the card or maybe an icon instead
                           ),
                         ],
                       ),

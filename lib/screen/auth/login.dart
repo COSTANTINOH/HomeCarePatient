@@ -8,8 +8,7 @@ import 'package:realEstate/widget/custom_shape.dart';
 import 'package:realEstate/widget/responsive_ui.dart';
 import 'package:realEstate/widget/textformfield.dart';
 import 'package:http/http.dart' as http;
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -37,30 +36,45 @@ class _SignInScreenState extends State<SignInScreen> {
   GlobalKey<FormState> _key = GlobalKey();
   bool isregistered = false;
 
-   Future<dynamic> login(
-     String phone, String password) async {
-    String myApi = "http://192.168.43.195/homecare/api/login.php/";
-    final response = await http.post(myApi, headers: {
-      'Accept': 'application/json'
-    }, body: {
-      "phone": "$phone",
-      "password": "$password"
-    });
+  _save(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'phone';
+    final value = token;
+    prefs.setString(key, value);
+  }
+
+   _saveDoctorId(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'doctor_id';
+    final value = token;
+    prefs.setString(key, value);
+  }
+
+  Future<dynamic> login(String phone, String password) async {
+    String myApi = "http://192.168.43.117/homecare/api/login.php/";
+    final response = await http.post(myApi,
+        headers: {'Accept': 'application/json'},
+        body: {"phone": "$phone", "password": "$password"});
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
 
       if (jsonResponse != null && jsonResponse != 404 && jsonResponse != 500) {
         var json = jsonDecode(response.body);
-        print(json.map((e) => e['cargo_no']));
-        setState(() {
+        setState((){
           isregistered = false;
           emailController.text = "";
           passwordController.text = "";
         });
+        print("user data ${json[0]['doctor_id']}");
+        _save(phone);
+        _saveDoctorId(json[0]['doctor_id']);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(
+              builder: (context) => HomeScreen(
+                    phonenumber: phone,
+                  )),
         );
         return Fluttertoast.showToast(
             msg: "Welcome to your account",
@@ -249,7 +263,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget passwordTextFormField() {
     return CustomTextField(
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.text,
       textEditingController: passwordController,
       icon: Icons.lock,
       obscureText: true,
@@ -274,7 +288,7 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           GestureDetector(
             onTap: () {
-                 Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => RegisterScreen()),
               );
@@ -295,16 +309,16 @@ class _SignInScreenState extends State<SignInScreen> {
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       onPressed: () {
-        if(emailController.text == "" || passwordController.text == ""){
-           return Fluttertoast.showToast(
-            msg: "Please provide all details",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white);
-        }else{
-          login(emailController.text,passwordController.text);
+        if (emailController.text == "" || passwordController.text == "") {
+          return Fluttertoast.showToast(
+              msg: "Please provide all details",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white);
+        } else {
+          login(emailController.text, passwordController.text);
         }
       },
       textColor: Colors.white,
@@ -366,9 +380,7 @@ class _SignInScreenState extends State<SignInScreen> {
             width: 5,
           ),
           GestureDetector(
-            onTap: () {
-             
-            },
+            onTap: () {},
             child: Text(
               "Sign up",
               style: TextStyle(
