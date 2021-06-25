@@ -43,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
     prefs.setString(key, value);
   }
 
-   _saveDoctorId(String token) async {
+  _saveDoctorId(String token) async {
     final prefs = await SharedPreferences.getInstance();
     final key = 'doctor_id';
     final value = token;
@@ -51,7 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<dynamic> login(String phone, String password) async {
-    String myApi = "http://192.168.43.117/homecare/api/login.php/";
+    String myApi = "http://192.168.43.195/homecare/api/login.php/";
     final response = await http.post(myApi,
         headers: {'Accept': 'application/json'},
         body: {"phone": "$phone", "password": "$password"});
@@ -61,7 +61,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       if (jsonResponse != null && jsonResponse != 404 && jsonResponse != 500) {
         var json = jsonDecode(response.body);
-        setState((){
+        setState(() {
           isregistered = false;
           emailController.text = "";
           passwordController.text = "";

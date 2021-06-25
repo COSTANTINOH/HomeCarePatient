@@ -231,7 +231,7 @@ class ScanPageView extends State<ScanPage> with SingleTickerProviderStateMixin {
   }
 
   Future<dynamic> sendBPM(String bpm, String phone) async {
-    String myApi = "http://192.168.43.117/homecare/api/bpm.php/";
+    String myApi = "http://192.168.43.195/homecare/api/bpm.php/";
 
     var now = new DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd - kk:mm');
@@ -239,7 +239,7 @@ class ScanPageView extends State<ScanPage> with SingleTickerProviderStateMixin {
 
     var getBPM;
 
-     if (_bpm > 0 && _bpm < 60) {
+    if (_bpm > 0 && _bpm < 60) {
       getBPM = "60";
     } else if (_bpm > 60 && _bpm < 150) {
       getBPM = _bpm.toString();

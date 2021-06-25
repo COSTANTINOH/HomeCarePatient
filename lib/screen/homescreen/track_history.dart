@@ -17,12 +17,11 @@ class TrackHistory extends StatefulWidget {
 
 class _TrackHistoryState extends State<TrackHistory> {
   Future<dynamic> getPatientPage(String phone) async {
-
     final prefs = await SharedPreferences.getInstance();
     final key = 'phone';
-    final value = prefs.get(key ) ?? 0;
+    final value = prefs.get(key) ?? 0;
 
-    String myApi = "http://192.168.43.117/homecare/api/getbpm.php";
+    String myApi = "http://192.168.43.195/homecare/api/getbpm.php";
     final response = await http.post(myApi, headers: {
       'Accept': 'application/json'
     }, body: {
