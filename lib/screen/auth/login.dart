@@ -50,6 +50,13 @@ class _SignInScreenState extends State<SignInScreen> {
     prefs.setString(key, value);
   }
 
+   _savePatient(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'phone';
+    final value = token;
+    prefs.setString(key, value);
+  }
+
   Future<dynamic> login(String phone, String password) async {
     String myApi = "http://192.168.1.55/homecare/api/login.php/";
     final response = await http.post(myApi,

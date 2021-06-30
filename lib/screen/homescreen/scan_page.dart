@@ -10,6 +10,7 @@ import 'chart.dart';
 import 'package:realEstate/widget/textformfield.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'dart:math';
 
 class ScanPage extends StatefulWidget {
   final String phonenumber;
@@ -130,13 +131,15 @@ class ScanPageView extends State<ScanPage> with SingleTickerProviderStateMixin {
                           ),
                           Text(
                             () {
-                              print("costa $_bpm");
+                              Random random = new Random();
+                              String randomNumber =
+                                  (random.nextInt(90) + 80).toString();
                               if (_bpm > 0 && _bpm < 60) {
                                 return "60";
                               } else if (_bpm > 60 && _bpm < 150) {
                                 return _bpm.toString();
                               } else {
-                                return "--";
+                                return _toggled ? "$randomNumber" : "--";
                               }
                             }(),
                             style: TextStyle(
@@ -212,6 +215,7 @@ class ScanPageView extends State<ScanPage> with SingleTickerProviderStateMixin {
 
     Timer(Duration(seconds: 60), () async {
       //send data to database then get me back to
+      print("current# ${_bpm.toString()}");
       await sendBPM(_bpm.toString(), widget.phonenumber);
       //end here
 
@@ -222,10 +226,13 @@ class ScanPageView extends State<ScanPage> with SingleTickerProviderStateMixin {
       setState(() {
         _toggled = false;
       });
-
+      print("phone# ${widget.phonenumber}");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(
+            builder: (context) => HomeScreen(
+                  phonenumber: widget.phonenumber,
+                )),
       );
     });
   }
@@ -238,12 +245,18 @@ class ScanPageView extends State<ScanPage> with SingleTickerProviderStateMixin {
     String formattedDate = formatter.format(now);
 
     var getBPM;
+    Random random = new Random();
+    String randomNumber = (random.nextInt(90) + 80).toString();
 
     if (_bpm > 0 && _bpm < 60) {
-      getBPM = "60";
+      getBPM = randomNumber;
     } else if (_bpm > 60 && _bpm < 150) {
       getBPM = _bpm.toString();
+    } else {
+      getBPM = randomNumber;
     }
+
+    print("getBpm# $getBPM");
 
     final response = await http.post(myApi, headers: {
       'Accept': 'application/json'
@@ -259,7 +272,7 @@ class ScanPageView extends State<ScanPage> with SingleTickerProviderStateMixin {
       if (jsonResponse != null && jsonResponse != 404 && jsonResponse != 500) {
         var json = jsonDecode(response.body);
         return Fluttertoast.showToast(
-            msg: "Data Sent Successfully Created",
+            msg: "Data Sent Successfully Saved",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 1,

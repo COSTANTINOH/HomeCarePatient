@@ -22,7 +22,10 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     getdata();
-    if (widget.phonenumber != "") {
+    print("dato# ${widget.phonenumber}");
+    if (widget.phonenumber == null ||
+        widget.phonenumber == "" ||
+        widget.phonenumber != null) {
       getPatientPage();
     } else {
       getPatientPage();
@@ -60,7 +63,7 @@ class _ProfileState extends State<Profile> {
     final response = await http.post(myApi, headers: {
       'Accept': 'application/json'
     }, body: {
-      "patient_id": "${widget.phonenumber}",
+      "patient_id": "$value",
     });
 
     if (response.statusCode == 200) {
