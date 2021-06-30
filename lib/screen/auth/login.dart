@@ -51,7 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<dynamic> login(String phone, String password) async {
-    String myApi = "http://192.168.43.195/homecare/api/login.php/";
+    String myApi = "http://192.168.1.55/homecare/api/login.php/";
     final response = await http.post(myApi,
         headers: {'Accept': 'application/json'},
         body: {"phone": "$phone", "password": "$password"});

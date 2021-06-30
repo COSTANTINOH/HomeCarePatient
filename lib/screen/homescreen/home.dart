@@ -33,7 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (index) {
       case 0:
         // Home
-        return LandPage();
+        return Profile(
+          phonenumber: widget.phonenumber,
+        );
         break;
       case 1:
         // post

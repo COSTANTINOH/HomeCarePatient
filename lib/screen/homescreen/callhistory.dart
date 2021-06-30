@@ -31,7 +31,7 @@ class _CallHistoryState extends State<CallHistory> {
     final key = 'doctor_id';
     final value = prefs.get(key) ?? 0;
 
-    String myApi = "http://192.168.43.195/homecare/api/get_doctor_phone.php";
+    String myApi = "http://192.168.1.55/homecare/api/get_doctor_phone.php";
     final response = await http.post(myApi, headers: {
       'Accept': 'application/json'
     }, body: {
@@ -56,7 +56,7 @@ class _CallHistoryState extends State<CallHistory> {
 
   Future<dynamic> sendCallHistory(
       String doctor_phone, String patient_id) async {
-    String myApi = "http://192.168.43.195/homecare/api/call_history.php/";
+    String myApi = "http://192.168.1.55/homecare/api/call_history.php/";
 
     var now = new DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd - kk:mm');
@@ -109,7 +109,7 @@ class _CallHistoryState extends State<CallHistory> {
     final key = 'phone';
     final value = prefs.get(key) ?? 0;
 
-    String myApi = "http://192.168.43.195/homecare/api/getcall.php";
+    String myApi = "http://192.168.1.55/homecare/api/getcall.php";
     final response = await http.post(myApi, headers: {
       'Accept': 'application/json'
     }, body: {

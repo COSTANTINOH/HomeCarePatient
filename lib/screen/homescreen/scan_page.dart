@@ -231,7 +231,7 @@ class ScanPageView extends State<ScanPage> with SingleTickerProviderStateMixin {
   }
 
   Future<dynamic> sendBPM(String bpm, String phone) async {
-    String myApi = "http://192.168.43.195/homecare/api/bpm.php/";
+    String myApi = "http://192.168.1.55/homecare/api/bpm.php/";
 
     var now = new DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd - kk:mm');

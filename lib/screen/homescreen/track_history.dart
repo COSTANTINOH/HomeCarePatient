@@ -21,7 +21,7 @@ class _TrackHistoryState extends State<TrackHistory> {
     final key = 'phone';
     final value = prefs.get(key) ?? 0;
 
-    String myApi = "http://192.168.43.195/homecare/api/getbpm.php";
+    String myApi = "http://192.168.1.55/homecare/api/getbpm.php";
     final response = await http.post(myApi, headers: {
       'Accept': 'application/json'
     }, body: {

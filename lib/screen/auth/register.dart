@@ -38,30 +38,71 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController xfname = TextEditingController();
   TextEditingController xphone = TextEditingController();
   TextEditingController xlocation = TextEditingController();
+  TextEditingController xage = TextEditingController();
   TextEditingController xpassword = TextEditingController();
   GlobalKey<FormState> _key = GlobalKey();
   bool isregistered = false;
+  var locations = [];
+  var loc;
+
+  @override
+  void initState() {
+    if (locations.isEmpty) {
+      getLocation();
+    } else {
+      getLocation();
+    }
+    super.initState();
+  }
+
+  Future<dynamic> getLocation() async {
+    String myApi = "http://192.168.1.55/homecare/api/getlocation.php";
+    final response =
+        await http.post(myApi, headers: {'Accept': 'application/json'});
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      // print(jsonResponse);
+      if (jsonResponse != null && jsonResponse != 404 && jsonResponse != 500) {
+        var json = jsonDecode(response.body);
+        print("data# $json");
+
+        for (Map m in json) {
+          locations.add(m['name'].toString());
+        }
+
+        print("location $locations");
+        // json.map((data) => {
+
+        // });
+        return json;
+      } else if (jsonResponse == 404) {
+      } else if (jsonResponse == 500) {}
+    } else {
+      print("no data");
+    }
+  }
 
   // register(xfname.text,xphone.text,xpassword.text,xlocation.text);
 
-  Future<dynamic> register(
-      String fname, String phone, String password, String location) async {
-    String myApi = "http://192.168.43.195/homecare/api/register.php/";
+  Future<dynamic> register(String fname, String phone, String password,
+      String location, String age, String loc) async {
+    String myApi = "http://192.168.1.55/homecare/api/register.php/";
     final response = await http.post(myApi, headers: {
       'Accept': 'application/json'
     }, body: {
       "fname": "$fname",
       "phone": "$phone",
       "password": "$password",
-      "location": "$location",
+      "location": "$loc",
+      "age": "$age"
     });
-
+    print("code# ${response.statusCode}");
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
 
       if (jsonResponse != null && jsonResponse != 404 && jsonResponse != 500) {
         var json = jsonDecode(response.body);
-        print(json.map((e) => e['cargo_no']));
         setState(() {
           isregistered = false;
           xfname.text = "";
@@ -128,7 +169,7 @@ class _SignInScreenState extends State<SignInScreen> {
               signInTextRow(),
               form(),
               forgetPassTextRow(),
-              SizedBox(height: _height / 12),
+              SizedBox(height: _height / 50),
               button(),
               // signUpTextRow(),
             ],
@@ -246,6 +287,8 @@ class _SignInScreenState extends State<SignInScreen> {
             SizedBox(height: _height / 40.0),
             locationTextFormField(),
             SizedBox(height: _height / 40.0),
+            ageTextFormField(),
+            SizedBox(height: _height / 40.0),
             passwordTextFormField(),
           ],
         ),
@@ -283,12 +326,51 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget locationTextFormField() {
+    return Theme(
+      data: new ThemeData(
+          primaryColor: Colors.black,
+          accentColor: Colors.black,
+          hintColor: Colors.black),
+      child: DropdownButton(
+        hint: Text(loc == null ? "Select Location" : loc,
+            style: TextStyle(color: Colors.green)),
+        iconEnabledColor: Colors.black,
+        underline: Text(''),
+        isExpanded: true,
+        iconSize: 40,
+        style: TextStyle(color: Colors.red, fontSize: 16),
+        items: locations.map((value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: new Text(
+              value,
+              style: TextStyle(color: Colors.black),
+            ),
+          );
+        }).toList(),
+        onChanged: (String newKey) {
+          setState(() {
+            loc = newKey;
+          });
+        },
+      ),
+    );
+    // CustomTextField(
+    //   keyboardType: TextInputType.emailAddress,
+    //   textEditingController: xlocation,
+    //   icon: Icons.location_city,
+    //   obscureText: true,
+    //   hint: "Location",
+    // );
+  }
+
+  Widget ageTextFormField() {
     return CustomTextField(
-      keyboardType: TextInputType.emailAddress,
-      textEditingController: xlocation,
-      icon: Icons.location_city,
+      keyboardType: TextInputType.number,
+      textEditingController: xage,
+      icon: Icons.person,
       obscureText: true,
-      hint: "Location",
+      hint: "age",
     );
   }
 
@@ -334,7 +416,9 @@ class _SignInScreenState extends State<SignInScreen> {
         if (xfname.text == "" "" ||
             xphone.text == "" ||
             xpassword.text == "" ||
-            xlocation.text == "") {
+            // xlocation.text == "" ||
+            xage.text == "" ||
+            loc == null) {
           () {
             return Fluttertoast.showToast(
                 msg: "Please Provied All records",
@@ -345,7 +429,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 textColor: Colors.white);
           }();
         } else {
-          register(xfname.text, xphone.text, xpassword.text, xlocation.text);
+          register(xfname.text, xphone.text, xpassword.text, xlocation.text,
+              xage.text, loc);
         }
       },
       textColor: Colors.white,
